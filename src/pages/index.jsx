@@ -4,32 +4,18 @@ import {
   Input,
   Select,
   Box,
-  Image,
   Button,
-  Grid,
-  GridItem,
   Text,
-  Heading,
-  CardBody,
-  Card,
-  Stack,
-  Divider,
   Spinner,
   Center,
 } from "@chakra-ui/react";
 import { Header } from "./../components/Header/index";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { baseUrl } from "./../assets/baseUrl";
+import dynamic from "next/dynamic";
 
 export default function Home({ dados }) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
   const [infos, setInfos] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [relevance, setRelevante] = useState(true);
@@ -91,7 +77,9 @@ export default function Home({ dados }) {
             w="400px"
             onKeyPress={onSubmit}
           />
-          <Button onClick={onSubmit}>Buscar</Button>
+          <Button colorScheme="teal" onClick={onSubmit}>
+            Buscar
+          </Button>
           <Select
             onChange={(e) => setRelevante(e.target.value)}
             name="relevante"
@@ -111,53 +99,7 @@ export default function Home({ dados }) {
             <Text ml="1%" position="relative" top="-135px" h="20px">
               {quantidade} artigos encontrados.
             </Text>
-
-            <Grid
-              position="relative"
-              top="-120px"
-              templateColumns="repeat(4, 1fr)"
-              gap={8}
-            >
-              {infos.map((dado) => {
-                return (
-                  <>
-                    {/* onClick={dado.link} */}
-                    {dado.length === 0 || dado === null ? (
-                      <Text>
-                        Não existem artigos relacionados ao termo pesquisado!
-                      </Text>
-                    ) : (
-                      <>
-                        <GridItem mb="20px" mx="auto" w="95%" h="380px">
-                          <Card key={dado.id} maxW="sm" h="380px">
-                            <CardBody>
-                              {dado.featured_media?.large == null ? (
-                                <Center w="100%" h="175px">
-                                  <Spinner />
-                                </Center>
-                              ) : (
-                                <Image
-                                  objectFit="cover"
-                                  src={dado.featured_media?.large}
-                                  borderRadius="sm"
-                                  alt={dado.title}
-                                />
-                              )}
-
-                              <Stack mt="6" spacing="3">
-                                <Heading size="sm">{dado.title}</Heading>
-                                <Text>{dado.title}</Text>
-                              </Stack>
-                            </CardBody>
-                            <Divider />
-                          </Card>
-                        </GridItem>
-                      </>
-                    )}
-                  </>
-                );
-              })}
-            </Grid>
+            <MyDynamicComponent infos={infos} />
           </>
         )}
       </Box>
@@ -178,3 +120,8 @@ export const getServerSideProps = async () => {
     console.log(error);
   }
 };
+
+const MyDynamicComponent = dynamic(() => import("../components/Grid"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
