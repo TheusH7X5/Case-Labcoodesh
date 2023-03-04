@@ -1,5 +1,7 @@
 ## Case Lab Coodesh
 
+#https://case-labcoodesh.vercel.app/
+
 # projeto do processo para vaga de Frontend React Developer na SafeWay: o Tech Challenge!
 # utilizando Reactjs, Nextjs, JavaScript, chakra-ui, axios, next-seo.
 
